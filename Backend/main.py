@@ -9,9 +9,10 @@ from pydantic import BaseModel, StrictInt, Field
 
 app = FastAPI()
 
-app.add_middlware(
+app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173",
+                   "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,7 +32,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 class BookRequest(BaseModel):
     title: str = Field(min_length=3, max_length=1000)
     author: str = Field(min_length=3, max_length=1000)
-    published_year: StrictInt = Field(gt=1800, lt=2026)
+    published_year: StrictInt = Field(gt=1800, le=2026)
 
 #To read book data
 @app.get("/books")

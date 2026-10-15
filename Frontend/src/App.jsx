@@ -4,14 +4,14 @@ import './App.css'
 
 function App() {
   const [books, setBooks] = useState([])
-  const [formData, setFormData] - useState({
+  const [formData, setFormData] = useState({
     title: '',
     author: '',
     published_year: ''
   })
   const [editingId, setEditingId] = useState(null)
 
-  const API_URL = 'http://localhost:8000'
+  const API_URL = 'http://127.0.0.1:8000'
 
   useEffect(() => {
     fetchAllBooks()
@@ -42,10 +42,11 @@ function App() {
     }
   }
 
- const updateBook = async (e) => {
+  // FIXED: Changed axios.post to axios.put, updated error messages
+  const updateBook = async (e) => {
     e.preventDefault()
     try { 
-      await axios.post(`${API_URL}/books/${editingId}`, {
+      await axios.put(`${API_URL}/books/${editingId}`, {
         title: formData.title,
         author: formData.author,
         published_year: parseInt(formData.published_year)
@@ -54,8 +55,8 @@ function App() {
       setEditingId(null)
       fetchAllBooks()
     } catch (error) {
-      console.error('Error creating book:', error)
-      alert('Error adding book')
+      console.error('Error updating book:', error)
+      alert('Error updating book')
     }
   }
 
@@ -65,13 +66,13 @@ function App() {
         await axios.delete(`${API_URL}/books/${bookId}`)
         fetchAllBooks()
       } catch (error) {
-      console.error('Error deleting book:', error)
-      alert('Error deleting book')
+        console.error('Error deleting book:', error)
+        alert('Error deleting book')
       }
     }
   }
 
-    const startEdit = (book) => {
+  const startEdit = (book) => {
     setEditingId(book.id)
     setFormData({
       title: book.title,
@@ -164,7 +165,7 @@ function App() {
                 onChange={(e) => setFormData({ ...formData, published_year: e.target.value })}
                 required
                 min="1801"
-                max="2025"
+                max="2026"
                 style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
               />
             </div>
